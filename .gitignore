@@ -1,0 +1,11 @@
+*.lo
+*.la
+*.log
+*.status
+libmodplug.pc
+libtool
+Makefile
+*/Makefile
+src/.deps
+src/.libs
+src/stamp-h1
