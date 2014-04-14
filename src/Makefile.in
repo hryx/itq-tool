@@ -126,9 +126,10 @@ am_libmodplug_la_OBJECTS = sndmix.lo sndfile.lo snd_fx.lo snd_flt.lo \
 	snd_dsp.lo fastmix.lo mmcmp.lo load_xm.lo load_wav.lo \
 	load_umx.lo load_ult.lo load_stm.lo load_s3m.lo load_ptm.lo \
 	load_okt.lo load_mtm.lo load_mod.lo load_med.lo load_mdl.lo \
-	load_it.lo load_far.lo load_dsm.lo load_dmf.lo load_dbm.lo \
-	load_ams.lo load_amf.lo load_669.lo load_j2b.lo load_mt2.lo \
-	load_psm.lo load_abc.lo load_mid.lo load_pat.lo modplug.lo
+	load_it.lo load_itq.lo load_far.lo load_dsm.lo load_dmf.lo \
+	load_dbm.lo load_ams.lo load_amf.lo load_669.lo load_j2b.lo \
+	load_mt2.lo load_psm.lo load_abc.lo load_mid.lo load_pat.lo \
+	modplug.lo
 libmodplug_la_OBJECTS = $(am_libmodplug_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -368,6 +369,7 @@ libmodplug_la_SOURCES = tables.h         \
                         load_med.cpp       \
                         load_mdl.cpp       \
                         load_it.cpp        \
+                        load_itq.cpp       \
                         load_far.cpp       \
                         load_dsm.cpp       \
                         load_dmf.cpp       \
@@ -491,6 +493,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/load_dsm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/load_far.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/load_it.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/load_itq.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/load_j2b.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/load_mdl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/load_med.Plo@am__quote@

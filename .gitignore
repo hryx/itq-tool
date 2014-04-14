@@ -9,3 +9,4 @@ Makefile
 src/.deps
 src/.libs
 src/stamp-h1
+autom4te.cache

@@ -207,6 +207,11 @@ char ModPlug_ExportIT(ModPlugFile* file,const char* filepath)
 {
 	return (char)file->mSoundFile.SaveIT(filepath,0);
 }
+
+char ModPlug_ExportITQ(ModPlugFile* file,const char* filepath) // ITQ
+{
+	return (char)file->mSoundFile.SaveITQ(filepath,0);
+}
 #endif // MODPLUG_NO_FILESAVE
 
 unsigned int ModPlug_NumInstruments(ModPlugFile* file)

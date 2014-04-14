@@ -28,6 +28,7 @@ libmodplug_la_SOURCES = tables.h         \
                         load_med.cpp       \
                         load_mdl.cpp       \
                         load_it.cpp        \
+                        load_itq.cpp       \
                         load_far.cpp       \
                         load_dsm.cpp       \
                         load_dmf.cpp       \
