@@ -126,6 +126,33 @@ typedef struct ITSAMPLESTRUCT
 	BYTE vit;
 } ITSAMPLESTRUCT;
 
+// ITQ (IT Compressed) Sample Format
+typedef struct ITQSAMPLESTRUCT
+{
+	DWORD id;		// 0x53515449 / ITQS
+	CHAR filename[12];
+	BYTE zero;
+	BYTE gvl;
+	BYTE flags;
+	BYTE vol;
+	CHAR name[26];
+	BYTE cvt;
+	BYTE dfp;
+	DWORD length;
+	DWORD loopbegin;
+	DWORD loopend;
+	DWORD C5Speed;
+	DWORD susloopbegin;
+	DWORD susloopend;
+	DWORD samplepointer;
+	BYTE vis;
+	BYTE vid;
+	BYTE vir;
+	BYTE vit;
+	DWORD nbytes;     // Number of bytes in compressed sample
+	CHAR samplecodec; // OGG Vorbis, FLAC, etc.
+} ITQSAMPLESTRUCT;
+
 #pragma pack()
 
 extern BYTE autovibit2xm[8];

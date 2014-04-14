@@ -147,6 +147,9 @@ MODPLUG_EXPORT char ModPlug_ExportMOD(ModPlugFile* file, const char* filepath);
 
 /*Export to a Impulse Tracker IT file. Should work OK in Little-Endian & Big-Endian platforms :-) */
 MODPLUG_EXPORT char ModPlug_ExportIT(ModPlugFile* file, const char* filepath);
+
+/* Export to ITQ -- based mostly on ExportIT above */
+MODPLUG_EXPORT char ModPlug_ExportITQ(ModPlugFile* file, const char* filepath);
 #endif // MODPLUG_NO_FILESAVE
 
 MODPLUG_EXPORT unsigned int ModPlug_NumInstruments(ModPlugFile* file);

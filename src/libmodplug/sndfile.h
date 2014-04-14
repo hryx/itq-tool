@@ -218,6 +218,13 @@ typedef const BYTE * LPCBYTE;
 #define RS_PCM32S		(RS_PCM16S|0xC0)			// mono 24-bit signed
 #define RS_STIPCM32S	(RS_PCM16S|0xC0|RSF_STEREO)	// stereo 24-bit signed
 
+// ITQ: Compression formats
+#define ITQ_UNKNOWN		0 // Shouldn't happen
+#define ITQ_PCM			1 // Use above formats
+#define ITQ_OGG			2
+#define ITQ_FLAC		3
+#define ITQ_WAVPACK		4
+
 // NNA types
 #define NNA_NOTECUT		0
 #define NNA_CONTINUE	1
@@ -625,6 +632,7 @@ public:
 	BOOL ReadMTM(LPCBYTE lpStream, DWORD dwMemLength);
 	BOOL ReadSTM(LPCBYTE lpStream, DWORD dwMemLength);
 	BOOL ReadIT(LPCBYTE lpStream, DWORD dwMemLength);
+	BOOL ReadITQ(LPCBYTE lpStream, DWORD dwMemLength); // ITQ
 	BOOL Read669(LPCBYTE lpStream, DWORD dwMemLength);
 	BOOL ReadUlt(LPCBYTE lpStream, DWORD dwMemLength);
 	BOOL ReadWav(LPCBYTE lpStream, DWORD dwMemLength);
@@ -655,6 +663,7 @@ public:
 	BOOL SaveS3M(LPCSTR lpszFileName, UINT nPacking=0);
 	BOOL SaveMod(LPCSTR lpszFileName, UINT nPacking=0);
 	BOOL SaveIT(LPCSTR lpszFileName, UINT nPacking=0);
+	BOOL SaveITQ(LPCSTR lpszFileName, UINT nPacking=0); // ITQ
 #endif // MODPLUG_NO_FILESAVE
 	// MOD Convert function
 	UINT GetBestSaveFormat() const;

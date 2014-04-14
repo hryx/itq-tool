@@ -89,7 +89,7 @@ inline LONG MulDiv (long a, long b, long c)
   return ((uint64_t) a * (uint64_t) b ) / c;
 }
 
-#define MODPLUG_NO_FILESAVE
+// #define MODPLUG_NO_FILESAVE
 #define NO_AGC
 #define LPCTSTR LPCSTR
 #define lstrcpyn strncpy
