@@ -17,11 +17,12 @@
 #pragma warning(disable:4244)
 #endif
 
+// From load_it.cpp
 extern BYTE autovibit2xm[8];
 extern BYTE autovibxm2it[8];
 
-//////////////////////////////////////////////////////////
-// Impulse Tracker IT file support
+////////////////////////////////////////////////////////////////
+// ITQ: Impulse Tracker file with Vorbis/FLAC compressed samples
 
 // for conversion of XM samples
 extern WORD XMPeriodTable[96+8];
@@ -262,9 +263,9 @@ BOOL CSoundFile::ReadITQ(const BYTE *lpStream, DWORD dwMemLength)
 	// Reading Samples
 	m_nSamples = pifh.smpnum;
 	if (m_nSamples >= MAX_SAMPLES) m_nSamples = MAX_SAMPLES-1;
-	for (UINT nsmp=0; nsmp<pifh.smpnum; nsmp++) if ((smppos[nsmp]) && (smppos[nsmp] <= dwMemLength - sizeof(ITSAMPLESTRUCT)))
+	for (UINT nsmp=0; nsmp<pifh.smpnum; nsmp++) if ((smppos[nsmp]) && (smppos[nsmp] <= dwMemLength - sizeof(ITQSAMPLESTRUCT)))
 	{
-		ITSAMPLESTRUCT pis = *(ITSAMPLESTRUCT *)(lpStream+smppos[nsmp]);
+		ITQSAMPLESTRUCT pis = *(ITQSAMPLESTRUCT *)(lpStream+smppos[nsmp]);
 		pis.id = bswapLE32(pis.id);
 		pis.length = bswapLE32(pis.length);
 		pis.loopbegin = bswapLE32(pis.loopbegin);
@@ -481,7 +482,7 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 	DWORD dwPatNamLen, dwChnNamLen;
 	ITFILEHEADER header, writeheader;
 	ITINSTRUMENT iti, writeiti;
-	ITSAMPLESTRUCT itss;
+	ITQSAMPLESTRUCT itss;
 	BYTE smpcount[MAX_SAMPLES];
 	DWORD inspos[MAX_INSTRUMENTS];
 	DWORD patpos[MAX_PATTERNS];
@@ -502,7 +503,7 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 	memset(&header, 0, sizeof(header));
 	dwPatNamLen = 0;
 	dwChnNamLen = 0;
-	header.id = 0x4D504D49; // IMPM
+	header.id = 0x4D515449; // ITQM (ITQ header)
 	lstrcpyn((char *)header.songname, m_szNames[0], 27);
 	header.reserved1 = 0x1004;
 	header.ordnum = 0;
@@ -761,8 +762,8 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 	for (UINT hsmp=0; hsmp<header.smpnum; hsmp++)
 	{
 		smppos[hsmp] = dwPos;
-		dwPos += sizeof(ITSAMPLESTRUCT);
-		fwrite(&itss, 1, sizeof(ITSAMPLESTRUCT), f);
+		dwPos += sizeof(ITQSAMPLESTRUCT);
+		fwrite(&itss, 1, sizeof(ITQSAMPLESTRUCT), f);
 	}
 	// Writing Patterns
 	for (UINT npat=0; npat<header.patnum; npat++)
@@ -926,7 +927,12 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 		memset(&itss, 0, sizeof(itss));
 		memcpy(itss.filename, psmp->name, 12);
 		memcpy(itss.name, m_szNames[nsmp], 26);
-		itss.id = 0x53504D49;
+		itss.id = 0x53515449; // "ITQS"
+		itss.samplecodec = ITQ_OGG; // ITQ: hard-coded for now
+		// ITQ: Create encoded sample
+		// TODO
+		char test_bytes[33] = ">> POLICE LINE - DO NOT CROSS <<";
+		itss.nbytes = sizeof (test_bytes); // ITQ: temp value; TODO
 		itss.gvl = (BYTE)psmp->nGlobalVol;
 		if (m_nInstruments)
 		{
@@ -1016,11 +1022,14 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 		itss.susloopend = bswapLE32(itss.susloopend);
 		itss.samplepointer = bswapLE32(itss.samplepointer);
 
-		fwrite(&itss, 1, sizeof(ITSAMPLESTRUCT), f);
+		fwrite(&itss, 1, sizeof(ITQSAMPLESTRUCT), f);
 		fseek(f, dwPos, SEEK_SET);
 		if ((psmp->pSample) && (psmp->nLength))
 		{
-			dwPos += WriteSample(f, psmp, flags);
+			// dwPos += WriteSample(f, psmp, flags); // original
+			// ITQ: write sample data
+			fwrite(&test_bytes, 1, itss.nbytes, f);
+			dwPos += itss.nbytes;
 		}
 	}
 	// Updating offsets
