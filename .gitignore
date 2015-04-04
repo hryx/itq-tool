@@ -1,3 +1,4 @@
+*.DS_Store
 *.o
 *.lo
 *.la
@@ -6,9 +7,8 @@
 libmodplug.pc
 libtool
 Makefile
-*/Makefile
-src/.deps
-src/.libs
-src/stamp-h1
+.deps
+.libs
+stamp-h1
 autom4te.cache
 build

@@ -7,7 +7,7 @@ find_package(Vorbis REQUIRED)
 
 include_directories(${VORBIS_INCLUDE_DIRS})
 
-set(modplug_dir "${CMAKE_SOURCE_DIR}/src")
+set(modplug_dir "${CMAKE_SOURCE_DIR}/modplug/src")
 set(modplug_sources
 	"${modplug_dir}/codec_vorbis.c"
 	"${modplug_dir}/fastmix.cpp"
@@ -46,7 +46,7 @@ set(modplug_sources
 	"${modplug_dir}/load_xm.cpp"
 	"${modplug_dir}/snd_flt.cpp"
 )
-set(itq_path "${CMAKE_SOURCE_DIR}/itq")
+set(itq_path "${CMAKE_SOURCE_DIR}/src")
 set(itq_sources
 	"${itq_path}/itq.c"
 )
