@@ -7,6 +7,10 @@
  *   itq decode source.itq
  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -108,3 +112,7 @@ int main(int argc, char** argv)
 
 	return 0;
 }
+
+#ifdef __cplusplus
+}
+#endif

@@ -221,7 +221,7 @@ typedef const BYTE * LPCBYTE;
 // ITQ: Compression formats
 #define ITQ_UNKNOWN		0 // Shouldn't happen
 #define ITQ_PCM			1 // Use above formats
-#define ITQ_OGG			2
+#define ITQ_VORBIS		2
 #define ITQ_FLAC		3
 #define ITQ_WAVPACK		4
 

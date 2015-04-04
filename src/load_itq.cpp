@@ -12,6 +12,7 @@
 #include "stdafx.h"
 #include "sndfile.h"
 #include "it_defs.h"
+#include "codec.h"
 
 #ifdef _MSC_VER
 #pragma warning(disable:4244)
@@ -274,6 +275,7 @@ BOOL CSoundFile::ReadITQ(const BYTE *lpStream, DWORD dwMemLength)
 		pis.susloopbegin = bswapLE32(pis.susloopbegin);
 		pis.susloopend = bswapLE32(pis.susloopend);
 		pis.samplepointer = bswapLE32(pis.samplepointer);
+		pis.nbytes = bswapLE32(pis.nbytes);
 
 		if (pis.id == 0x53504D49)
 		{
@@ -928,11 +930,8 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 		memcpy(itss.filename, psmp->name, 12);
 		memcpy(itss.name, m_szNames[nsmp], 26);
 		itss.id = 0x53515449; // "ITQS"
-		itss.samplecodec = ITQ_OGG; // ITQ: hard-coded for now
-		// ITQ: Create encoded sample
-		// TODO
-		char test_bytes[33] = ">> POLICE LINE - DO NOT CROSS <<";
-		itss.nbytes = sizeof (test_bytes); // ITQ: temp value; TODO
+		itss.samplecodec = ITQ_VORBIS; // ITQ: hard-coded for now
+		itss.nbytes = 0;
 		itss.gvl = (BYTE)psmp->nGlobalVol;
 		if (m_nInstruments)
 		{
@@ -1011,8 +1010,7 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 			}
 		}
 		itss.samplepointer = dwPos;
-		fseek(f, smppos[nsmp-1], SEEK_SET);
-
+		// fseek(f, smppos[nsmp-1], SEEK_SET); // Move to sample header
 		itss.id = bswapLE32(itss.id);
 		itss.length = bswapLE32(itss.length);
 		itss.loopbegin = bswapLE32(itss.loopbegin);
@@ -1021,15 +1019,29 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 		itss.susloopbegin = bswapLE32(itss.susloopbegin);
 		itss.susloopend = bswapLE32(itss.susloopend);
 		itss.samplepointer = bswapLE32(itss.samplepointer);
-
-		fwrite(&itss, 1, sizeof(ITQSAMPLESTRUCT), f);
-		fseek(f, dwPos, SEEK_SET);
+		fseek(f, dwPos, SEEK_SET); // Move to sample data position
 		if ((psmp->pSample) && (psmp->nLength))
 		{
-			// dwPos += WriteSample(f, psmp, flags); // original
 			// ITQ: write sample data
-			fwrite(&test_bytes, 1, itss.nbytes, f);
-			dwPos += itss.nbytes;
+			int ret;
+			// DWORD pos_before = ftell(f);
+			// DWORD pos_after = 0;
+			ret = write_vorbis_sample(psmp->pSample,
+				(psmp->uFlags & CHN_16BIT ? 2 : 1) * (psmp->uFlags & CHN_STEREO ? 2 : 1) * psmp->nLength,
+				f,
+				psmp->uFlags & CHN_STEREO ? 2 : 1,
+				psmp->uFlags & CHN_16BIT ? 16 : 8,
+				psmp->nC4Speed,
+				0.2f);
+			if (ret)
+				return FALSE; // Abort
+			// pos_after = ftell(f);
+			// itss.nbytes = pos_after - pos_before;
+			itss.nbytes = ftell(f) - dwPos; // No. of bytes written
+			dwPos += itss.nbytes; // Update file position
+			fseek(f, smppos[nsmp-1], SEEK_SET); // Back to sample header
+			fwrite(&itss, 1, sizeof(ITQSAMPLESTRUCT), f); // Write header
+			fseek(f, dwPos, SEEK_SET); // Back to end of file
 		}
 	}
 	// Updating offsets
