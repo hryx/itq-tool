@@ -1,10 +1,6 @@
 /* itq: Frontend program to convert .it to .itq and vice versa
- * by hryx 2014
+ * by hryx 2014-2015
  * Public Domain
- *
- * Usage:
- *   itq encode source.it
- *   itq decode source.itq
  */
 
 #ifdef __cplusplus
