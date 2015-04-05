@@ -40,7 +40,7 @@ int write_vorbis_sample(signed char* insample, unsigned long len, FILE* outfile,
 
 	vorbis_info_init(&vi);
 	ret = vorbis_encode_init_vbr(&vi, channels, rate, quality);
-	if (ret)
+	if (ret) /* e.g., invalid quality setting */
 		return ret;
 	vorbis_comment_init(&vc);
 	vorbis_comment_add_tag(&vc, "ENCODER", "ITQ inside hacked libmodplug");

@@ -663,7 +663,7 @@ public:
 	BOOL SaveS3M(LPCSTR lpszFileName, UINT nPacking=0);
 	BOOL SaveMod(LPCSTR lpszFileName, UINT nPacking=0);
 	BOOL SaveIT(LPCSTR lpszFileName, UINT nPacking=0);
-	BOOL SaveITQ(LPCSTR lpszFileName, UINT nPacking=0); // ITQ
+	BOOL SaveITQ(LPCSTR lpszFileName, float quality); // ITQ
 #endif // MODPLUG_NO_FILESAVE
 	// MOD Convert function
 	UINT GetBestSaveFormat() const;

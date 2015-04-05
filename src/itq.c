@@ -18,7 +18,8 @@ extern "C" {
 "  itq enc [options] {infile}       compress .it file into .itq\n" \
 "  itq dec [options] {infile}       decompress .itq file into .it\n" \
 "Options:\n" \
-"  -o outfile                       set output filename\n"
+"  -o outfile                       set output filename\n" \
+"  -q quality                       vorbis quality (-0.1 to 1.0)\n"
 
 typedef enum {
 	CMD_NONE = 0,
@@ -28,7 +29,8 @@ typedef enum {
 
 typedef enum {
 	OPT_NONE = 0,
-	OPT_SET_OUTNAME
+	OPT_SET_OUTNAME,
+	OPT_SET_QUALITY
 } option;
 
 typedef enum {
@@ -57,6 +59,7 @@ int main(int argc, char** argv)
 	char* inbuffer = 0;
 	long int insize = 0;
 	long int bytesread = 0;
+	float quality = 0.2;
 	ModPlugFile* modfile = 0;
 
 	/**** Process command line arguments ****/
@@ -91,8 +94,15 @@ int main(int argc, char** argv)
 			outfilename = arg;
 			opt = OPT_NONE;
 		}
+		else if (opt == OPT_SET_QUALITY) {
+			quality = atof(arg);
+			opt = OPT_NONE;
+		}
 		else if (strcmp(arg, "-o") == 0) {
 			opt = OPT_SET_OUTNAME;
+		}
+		else if (strcmp(arg, "-q") == 0) {
+			opt = OPT_SET_QUALITY;
 		}
 		else {
 			infilename = arg;
@@ -115,6 +125,17 @@ int main(int argc, char** argv)
 			err = ERR_NOTOK;
 			goto pass_away;
 		}
+	}
+
+	/* Make options reasonable */
+	if (quality < -0.1 || quality > 1.0) {
+		if (quality < -0.1) {
+			quality = -0.1;
+		}
+		else if (quality > 1.0) {
+			quality = 1.0;
+		}
+		printf("Note: Clamping quality setting to %.2f\n", quality);
 	}
 
 	/**** Load the mod ****/
@@ -151,11 +172,11 @@ int main(int argc, char** argv)
 	/* Encode or decode and save new file */
 	if (cmd == CMD_OUTPUT_ITQ) {
 		printf("Encoding file...\n\n");
-		if (!ModPlug_ExportITQ(modfile, outfilename)) {
+		if (!ModPlug_ExportITQ(modfile, outfilename, quality)) {
 			err = ERR_OUTFILE_PROBLEM;
 			goto pass_away;
 		}
-		printf("\nFile written to %s\n", outfilename);
+		printf("\nFile written to %s with quality setting %.2f\n", outfilename, quality);
 	}
 	else if (cmd == CMD_OUTPUT_IT) {
 		err = ERR_NOTYET;

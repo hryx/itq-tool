@@ -41,7 +41,7 @@ this time, but this field affords future additions.
 
 - [x] Encode .it into .itq
 - [ ] Decode .itq into .it
-- [ ] Vorbis quality option
+- [x] Vorbis quality option
 - [x] Output filename option
 
 ## Subjectively relevant links

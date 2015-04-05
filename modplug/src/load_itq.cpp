@@ -478,7 +478,7 @@ BOOL CSoundFile::ReadITQ(const BYTE *lpStream, DWORD dwMemLength)
 #pragma warning(disable:4100)
 #endif
 
-BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
+BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, float quality)
 //---------------------------------------------------------
 {
 	DWORD dwPatNamLen, dwChnNamLen;
@@ -986,17 +986,6 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 		if (psmp->uFlags & CHN_PANNING) itss.dfp |= 0x80;
 		if ((psmp->pSample) && (psmp->nLength)) itss.cvt = 0x01;
 		UINT flags = RS_PCM8S;
-#ifndef NO_PACKING
-		if (nPacking)
-		{
-			if ((!(psmp->uFlags & (CHN_16BIT|CHN_STEREO)))
-			 && (CanPackSample((char *)psmp->pSample, psmp->nLength, nPacking)))
-			{
-				flags = RS_ADPCM4;
-				itss.cvt = 0xFF;
-			}
-		} else
-#endif // NO_PACKING
 		{
 			if (psmp->uFlags & CHN_STEREO)
 			{
@@ -1032,7 +1021,7 @@ BOOL CSoundFile::SaveITQ(LPCSTR lpszFileName, UINT nPacking)
 				psmp->uFlags & CHN_STEREO ? 2 : 1,
 				psmp->uFlags & CHN_16BIT ? 16 : 8,
 				psmp->nC4Speed,
-				0.2f);
+				quality);
 			if (ret)
 				return FALSE; // Abort
 			// pos_after = ftell(f);
